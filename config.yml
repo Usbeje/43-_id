@@ -1,0 +1,18 @@
+debug: false
+uuid: 2f97d202-b0ef-44e1-91e4-b70a9ca55fcc
+token_id: C9t4ZoAkyp53dIxd
+token: iF1TXxJLUvXuTl8tacPuIk5XvzFLAUQevG9JYJkOxfATAveuweKtNBb1OyzSIK39
+api:
+  host: 0.0.0.0
+  port: 8080
+  ssl:
+    enabled: true
+    cert: /etc/letsencrypt/live/clear-shark-fancy.ngrok-free.app/fullchain.pem
+    key: /etc/letsencrypt/live/clear-shark-fancy.ngrok-free.app/privkey.pem
+  upload_limit: 100
+system:
+  data: /var/lib/pterodactyl/volumes
+  sftp:
+    bind_port: 2022
+allowed_mounts: []
+remote: 'https://didactic-space-tribble-pjgrvqvrq4v52rj5q-80.app.github.dev'
