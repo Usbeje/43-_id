@@ -13,7 +13,7 @@ bot.on('message', (msg) => {
   const args = msg.text.split(' ').slice(1);
 
   // Jalankan perintah di terminal Termux
-  const child = spawn(command, args);
+  const child = spawn('sh', ['-c', `${command} ${args.join(' ')}`]);
 
   // Kirim output stdout secara real-time ke chat Telegram
   child.stdout.on('data', (data) => {
