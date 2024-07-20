@@ -1,5 +1,5 @@
  const TelegramBot = require('node-telegram-bot-api');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 // Ganti dengan token bot kamu
 const token = '7392967430:AAEWky63is69WKIy0DIMbXKkObDLcBNtD4M';
@@ -7,22 +7,27 @@ const token = '7392967430:AAEWky63is69WKIy0DIMbXKkObDLcBNtD4M';
 // Buat instance bot
 const bot = new TelegramBot(token, { polling: true });
 
-// Listener untuk setiap pesan yang diterima
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
-  const command = msg.text;
+  const command = msg.text.split(' ')[0];
+  const args = msg.text.split(' ').slice(1);
 
-  // Jalankan perintah di terminal
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      bot.sendMessage(chatId, `Error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      bot.sendMessage(chatId, `Stderr: ${stderr}`);
-      return;
-    }
-    bot.sendMessage(chatId, `Output: ${stdout}`);
+  // Jalankan perintah di terminal Termux
+  const child = spawn(command, args);
+
+  // Kirim output stdout secara real-time ke chat Telegram
+  child.stdout.on('data', (data) => {
+    bot.sendMessage(chatId, data.toString());
+  });
+
+  // Kirim output stderr secara real-time ke chat Telegram
+  child.stderr.on('data', (data) => {
+    bot.sendMessage(chatId, `Stderr: ${data.toString()}`);
+  });
+
+  // Kirim pesan saat perintah selesai
+  child.on('close', (code) => {
+    bot.sendMessage(chatId, `Process exited with code ${code}`);
   });
 });
 
